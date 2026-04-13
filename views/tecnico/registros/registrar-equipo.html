@@ -1,0 +1,118 @@
+<!-- Vista: Registrar Equipo -->
+<div class="form-view">
+
+  <!-- Barra superior con botón Regresar -->
+  <div class="form-header">
+    <button type="button" class="form-back-btn" aria-label="Regresar al panel principal">
+      <img src="assets/icons/return.svg" alt="" aria-hidden="true">
+      <span>Regresar</span>
+    </button>
+  </div>
+
+  <!-- Contenedor del formulario -->
+  <div class="form-container">
+    
+    <!-- Logo de marca de agua -->
+    <div class="logo-watermark">
+      <img src="assets/img/Logo.png" alt="CliniTech Logo">
+    </div>
+    
+    <!-- Título -->
+    <h2 class="form-title">Formulario de registro de equipo</h2>
+
+    <!-- Formulario -->
+    <form id="form-registrar-equipo" class="form-body">
+      
+      <div class="form-fields">
+        <!-- Información del Equipo -->
+        <div class="form-grid form-grid-2">
+          <div>
+            <label for="equipo-marca" class="sr-only">Marca</label>
+            <input 
+              type="text" 
+              id="equipo-marca"
+              name="marca" 
+              placeholder="Marca*"
+              required
+              class="form-input"
+              aria-label="Marca del equipo"
+            >
+          </div>
+          
+          <div>
+            <label for="equipo-modelo" class="sr-only">Modelo</label>
+            <input 
+              type="text" 
+              id="equipo-modelo"
+              name="modelo" 
+              placeholder="Modelo*"
+              required
+              class="form-input"
+              aria-label="Modelo del equipo"
+            >
+          </div>
+        </div>
+
+        <!-- Número de Serie -->
+        <div>
+          <label for="equipo-serial" class="sr-only">Número de serie</label>
+          <input 
+            type="text" 
+            id="equipo-serial"
+            name="serial" 
+            placeholder="Número de serie*"
+            required
+            class="form-input"
+            aria-label="Número de serie"
+          >
+        </div>
+
+        <!-- Sección Cliente -->
+        <div class="form-section">
+          <h3 class="form-section-title">Cliente</h3>
+          
+          <div class="form-select-wrapper">
+            <div class="form-select-icon right">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <label for="equipo-cliente" class="sr-only">Cliente</label>
+            <select 
+              id="equipo-cliente"
+              name="cliente" 
+              required
+              class="form-select with-icon-right"
+              aria-label="Seleccionar cliente"
+            >
+              <option value="" disabled selected>Cliente*</option>
+              <option value="usuario1">Juan Pérez</option>
+              <option value="usuario2">María García</option>
+              <option value="usuario3">Carlos López</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="form-actions">
+        <button 
+          type="submit"
+          class="form-btn form-btn-primary"
+        >
+          Registrar
+        </button>
+        
+        <button 
+          type="button"
+          class="form-btn form-btn-cancel"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Script específico de esta vista -->
+<script src="js/views/registrar-equipo.js"></script>

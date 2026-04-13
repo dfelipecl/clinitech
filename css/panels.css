@@ -1,0 +1,124 @@
+/* ===========================
+   ESTILOS DE PANELES (LAYOUT)
+   =========================== */
+
+/* ===========================
+   SIDEBAR
+   =========================== */
+
+/* Animaciones del Sidebar */
+#sidebar {
+  transition: width 0.3s ease-in-out;
+}
+
+/* Submenús - Layout */
+.submenu {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  /* Misma duración para ambas — evita que el texto aparezca antes de que abra el contenedor */
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.submenu.open {
+  opacity: 1;
+  /* max-height se asigna por JS con scrollHeight */
+}
+
+/* ===========================
+   SIDEBAR COLAPSADO
+   =========================== */
+
+.sidebar-collapsed {
+  width: 5rem !important;
+}
+
+/* Ocultar elementos cuando está colapsado */
+.sidebar-collapsed .sidebar-text,
+.sidebar-collapsed .sidebar-badge,
+.sidebar-collapsed .sidebar-user,
+.sidebar-collapsed .sidebar-user-menu,
+.sidebar-collapsed .submenu {
+  display: none !important;
+}
+
+/* Ajustar navegación colapsada */
+.sidebar-collapsed #navigation {
+  flex: 1 !important;
+  padding: 1rem 0.5rem !important;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.sidebar-collapsed #navigation button,
+.sidebar-collapsed #navigation .menu-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  justify-content: center;
+  margin: 0 auto 0.5rem auto;
+}
+
+/* Mensajes y notificaciones colapsados */
+.sidebar-collapsed #messages-notifications {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.sidebar-collapsed #messages-notifications button {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  justify-content: center;
+  position: relative;
+}
+
+/* Usuario colapsado */
+.sidebar-collapsed #user-info {
+  display: flex !important;
+  margin: 1rem auto 1.5rem auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-collapsed #user-info > *:not(.w-10) {
+  display: none;
+}
+
+.sidebar-collapsed #user-info .w-10 {
+  margin: 0;
+}
+
+/* ===========================
+   RESPONSIVE - MOBILE
+   =========================== */
+
+@media (max-width: 1023px) {
+  /* Sidebar móvil */
+  #sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 30;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  #sidebar:not(.-translate-x-full) {
+    transform: translateX(0);
+  }
+  
+  /* Overlay cuando el sidebar está abierto en móvil */
+  #sidebar-overlay {
+    z-index: 20;
+  }
+}
