@@ -6,6 +6,7 @@
 const TecnicoService = require('../services/tecnicoService');
 
 const TecnicoController = {
+
   /**
    * GET /api/tecnicos
    */
@@ -38,6 +39,20 @@ const TecnicoController = {
     try {
       const tecnico = await TecnicoService.actualizarTecnico(req.params.id, req.body);
       res.json({ ok: true, mensaje: 'Técnico actualizado', datos: tecnico });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /**
+   * DELETE /api/tecnicos/:id
+   * Eliminación lógica: cambia el estado del técnico a 'inactivo'.
+   * No elimina el registro para preservar el historial de reparaciones.
+   */
+  async desactivar(req, res, next) {
+    try {
+      const tecnico = await TecnicoService.desactivarTecnico(req.params.id);
+      res.json({ ok: true, mensaje: 'Técnico desactivado correctamente', datos: tecnico });
     } catch (error) {
       next(error);
     }

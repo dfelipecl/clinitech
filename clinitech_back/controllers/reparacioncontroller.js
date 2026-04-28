@@ -1,11 +1,12 @@
 /**
  * CONTROLADOR: Reparacion
- * Maneja las peticiones sobre reparaciones
+ * Maneja las peticiones sobre órdenes de reparación
  */
 
 const ReparacionService = require('../services/reparacionService');
 
 const ReparacionController = {
+
   /**
    * GET /api/reparaciones
    */
@@ -32,7 +33,7 @@ const ReparacionController = {
 
   /**
    * POST /api/reparaciones
-   * Body: { diagnostico, procedimiento, costo_total, fecha_inicio, id_tecnico, id_equipo }
+   * Body: { diagnostico, procedimiento, costo_total?, fecha_inicio?, id_tecnico, id_equipo }
    */
   async registrar(req, res, next) {
     try {
@@ -51,6 +52,19 @@ const ReparacionController = {
     try {
       const reparacion = await ReparacionService.actualizarEstado(req.params.id, req.body);
       res.json({ ok: true, mensaje: 'Estado actualizado', datos: reparacion });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /**
+   * DELETE /api/reparaciones/:id
+   * Solo se permite eliminar órdenes en estado 'recibido'
+   */
+  async eliminar(req, res, next) {
+    try {
+      await ReparacionService.eliminarReparacion(req.params.id);
+      res.json({ ok: true, mensaje: 'Reparación eliminada correctamente' });
     } catch (error) {
       next(error);
     }
