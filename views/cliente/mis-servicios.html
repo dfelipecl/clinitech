@@ -1,0 +1,103 @@
+<!-- Vista: Mis Servicios (Panel Cliente) -->
+<div class="form-view">
+
+  <div class="form-header">
+    <button type="button" class="form-back-btn" aria-label="Regresar al panel principal">
+      <img src="assets/icons/return.svg" alt="" aria-hidden="true">
+      <span>Regresar</span>
+    </button>
+  </div>
+
+  <div class="form-container" style="max-width:100%">
+    <div class="logo-watermark">
+      <img src="assets/img/Logo.png" alt="CliniTech Logo">
+    </div>
+
+    <h2 class="form-title">Mis servicios</h2>
+
+    <div id="servicios-content" class="relative z-10 mt-4">
+      <div class="text-center py-8 text-gray-400">
+        <div class="loading-spinner mx-auto"></div>
+        <p class="mt-2">Cargando tus servicios...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  FormHandler.initBackButton();
+
+  const ESTADOS = {
+    recibido:     { label: 'Recibido',       color: 'bg-blue-100 text-blue-700',    icon: '📥' },
+    diagnostico:  { label: 'En diagnóstico', color: 'bg-yellow-100 text-yellow-700', icon: '🔍' },
+    en_reparacion:{ label: 'En reparación',  color: 'bg-orange-100 text-orange-700', icon: '🔧' },
+    listo:        { label: 'Listo para recoger', color: 'bg-green-100 text-green-700', icon: '✅' },
+    entregado:    { label: 'Entregado',       color: 'bg-gray-100 text-gray-600',    icon: '📦' },
+  };
+
+  function tarjeta(r) {
+    const e = ESTADOS[r.estado] || { label: r.estado, color: 'bg-gray-100 text-gray-600', icon: '❓' };
+    const costo = r.costo_estimado ? '$' + Number(r.costo_estimado).toLocaleString('es-CO') : 'Por definir';
+    const fecha = r.fecha_inicio
+      ? new Date(r.fecha_inicio).toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' })
+      : '—';
+
+    return `
+      <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <p class="font-semibold text-tech-blue text-lg">${Utils.sanitizeHTML(r.marca || '')} ${Utils.sanitizeHTML(r.modelo || '')}</p>
+            <p class="text-sm text-gray-400">S/N: ${Utils.sanitizeHTML(r.numero_serie || '—')}</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-medium ${e.color}">${e.icon} ${e.label}</span>
+        </div>
+        <div class="space-y-1 text-sm text-gray-600">
+          <p><span class="font-medium">Diagnóstico:</span> ${Utils.sanitizeHTML(r.diagnostico || '—')}</p>
+          <p><span class="font-medium">Costo estimado:</span> ${costo}</p>
+          <p class="text-xs text-gray-400 pt-1">Ingreso: ${fecha} · Orden #${r.id_reparacion}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  async function cargarServicios() {
+    const container = document.getElementById('servicios-content');
+    try {
+      // El endpoint retorna reparaciones; filtramos por id_cliente de la sesión
+      const session = Auth.getSession();
+      const data = await API.getReparaciones();
+      const todas = data.datos || [];
+
+      // Filtrar las del cliente autenticado si hay id_cliente
+      const mias = session.id_cliente
+        ? todas.filter((r) => r.id_cliente === session.id_cliente)
+        : todas;
+
+      if (mias.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-gray-400">
+            <p class="text-4xl mb-3">🖥️</p>
+            <p class="text-lg font-medium">No tienes servicios registrados</p>
+            <p class="text-sm mt-1">Cuando lleves un equipo al taller aparecerá aquí</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+          ${mias.map(tarjeta).join('')}
+        </div>
+        <p class="text-xs text-gray-400 mt-4 text-right">${mias.length} servicio(s)</p>
+      `;
+    } catch (err) {
+      container.innerHTML = '<p class="text-center text-red-400 py-8">Error al cargar los servicios: ' + Utils.sanitizeHTML(err.message) + '</p>';
+    }
+  }
+
+  cargarServicios();
+})();
+</script>

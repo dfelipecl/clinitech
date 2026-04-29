@@ -1,0 +1,176 @@
+<!-- Vista: Ingresar Equipo a Diagnóstico/Reparación -->
+<div class="form-view">
+
+  <div class="form-header">
+    <button type="button" class="form-back-btn" aria-label="Regresar al panel principal">
+      <img src="assets/icons/return.svg" alt="" aria-hidden="true">
+      <span>Regresar</span>
+    </button>
+  </div>
+
+  <div class="form-container">
+    <div class="logo-watermark">
+      <img src="assets/img/Logo.png" alt="CliniTech Logo">
+    </div>
+
+    <h2 class="form-title">Formulario de Ingreso a Diagnóstico/Reparación</h2>
+
+    <form id="form-ingreso-equipo" class="form-body">
+      <div class="form-fields">
+
+        <!-- Selector de equipo -->
+        <div class="form-section">
+          <h3 class="form-section-title">Equipo</h3>
+          <div class="form-select-wrapper">
+            <div class="form-select-icon left">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <label for="rep-equipo" class="sr-only">Seleccionar equipo</label>
+            <select id="rep-equipo" name="id_equipo" required class="form-select with-icon-left" aria-label="Seleccionar equipo">
+              <option value="" disabled selected>Cargando equipos...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Motivo / problema reportado por el cliente (escrito por el técnico en el ingreso) -->
+        <div>
+          <label for="rep-descripcion-problema" class="form-section-title">Motivo/Problemas reportados por el cliente</label>
+          <textarea
+            id="rep-descripcion-problema"
+            name="descripcion_problema"
+            placeholder="Describa el problema tal como lo reporta el cliente*"
+            required
+            rows="3"
+            class="form-input resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Diagnóstico inicial del técnico -->
+        <div>
+          <label for="rep-diagnostico" class="form-section-title">Diagnóstico</label>
+          <textarea
+            id="rep-diagnostico"
+            name="diagnostico"
+            placeholder="Diagnóstico inicial del técnico*"
+            required
+            rows="3"
+            class="form-input resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Estado -->
+        <div>
+          <label class="form-section-title">Estado del equipo</label>
+          <div class="form-select-wrapper">
+            <div class="form-select-icon left">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <label for="rep-estado" class="sr-only">Estado del equipo</label>
+            <select id="rep-estado" name="estado_inicial" required class="form-select with-icon-left">
+              <option value="" disabled selected>Seleccione*</option>
+              <option value="en_diagnostico">En Diagnóstico</option>
+              <option value="pendiente_aprobacion">Pendiente de Aprobación</option>
+              <option value="en_reparacion">En Reparación</option>
+              <option value="rechazado">Rechazado/Cancelado</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Descripción del estado -->
+        <div>
+          <label for="rep-descripcion-estado" class="form-section-title">Descripción del estado</label>
+          <input
+            type="text"
+            id="rep-descripcion-estado"
+            name="descripcion_estado"
+            placeholder="Descripción del estado (opcional)"
+            class="form-input"
+          >
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="form-btn form-btn-primary">Ingresar a Reparación</button>
+        <button type="button" class="form-btn form-btn-cancel">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const formId = 'form-ingreso-equipo';
+  FormHandler.initBackButton();
+  FormHandler.initCancelButton(formId);
+
+  // ── Cargar equipos disponibles desde GET /api/equipos ──────────────────
+  async function cargarEquipos() {
+    const select = document.getElementById('rep-equipo');
+    if (!select) return;
+    try {
+      const data = await API.getEquipos();
+      const equipos = data.datos || [];
+      select.innerHTML = '';
+      if (equipos.length === 0) {
+        select.innerHTML = '<option value="" disabled selected>No hay equipos registrados</option>';
+        return;
+      }
+      const ph = document.createElement('option');
+      ph.value = ''; ph.disabled = true; ph.selected = true;
+      ph.textContent = 'Buscar equipo*';
+      select.appendChild(ph);
+      equipos.forEach((eq) => {
+        const opt = document.createElement('option');
+        opt.value = eq.id_equipo;
+        opt.textContent = eq.marca + ' ' + eq.modelo + ' — S/N: ' + eq.numero_serie;
+        select.appendChild(opt);
+      });
+    } catch (err) {
+      select.innerHTML = '<option value="" disabled selected>Error al cargar equipos</option>';
+      console.error('Error cargando equipos:', err);
+    }
+  }
+
+  cargarEquipos();
+
+  // ── Submit ───────────────────────────────────────────────────────────────
+  FormHandler.handleFormSubmit(formId, async (data) => {
+    if (!data.id_equipo) throw new Error('Por favor seleccione un equipo');
+    if (!data.descripcion_problema || !data.descripcion_problema.trim()) throw new Error('El motivo/problema reportado es requerido');
+    if (!data.diagnostico || !data.diagnostico.trim()) throw new Error('El diagnóstico es requerido');
+    if (!data.estado_inicial) throw new Error('Por favor seleccione el estado del equipo');
+
+    const session = Auth.getSession();
+
+    // Diagnóstico puede incluir la descripción de estado si se llenó
+    const diagnosticoFinal = data.descripcion_estado
+      ? data.diagnostico.trim() + '\n\nObservación: ' + data.descripcion_estado.trim()
+      : data.diagnostico.trim();
+
+    const payload = {
+      id_equipo:            parseInt(data.id_equipo, 10),
+      id_tecnico:           session.id_tecnico,
+      diagnostico:          diagnosticoFinal,
+      descripcion_problema: data.descripcion_problema || null,
+    };
+
+    // 1. Crear la reparación (entra en 'recibido' por defecto en la BD)
+    const resp = await API.crearReparacion(payload);
+
+    // 2. Si el estado elegido no es 'recibido', actualizarlo de inmediato
+    if (data.estado_inicial !== 'recibido' && resp.datos && resp.datos.id_reparacion) {
+      await API.actualizarEstadoReparacion(resp.datos.id_reparacion, data.estado_inicial);
+    }
+
+    FormHandler.showSuccess('Reparación registrada exitosamente');
+    cargarEquipos();
+  });
+})();
+</script>

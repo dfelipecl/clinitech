@@ -1,0 +1,123 @@
+<!-- Vista: Actualizar Estado de un Equipo -->
+<div class="form-view">
+
+  <div class="form-header">
+    <button type="button" class="form-back-btn" aria-label="Regresar al panel principal">
+      <img src="assets/icons/return.svg" alt="" aria-hidden="true">
+      <span>Regresar</span>
+    </button>
+  </div>
+
+  <div class="form-container">
+    <div class="logo-watermark">
+      <img src="assets/img/Logo.png" alt="CliniTech Logo">
+    </div>
+
+    <h2 class="form-title">Actualizar estado de reparación</h2>
+
+    <form id="form-actualizar-estado" class="form-body">
+      <div class="form-fields">
+
+        <!-- Reparación -->
+        <div class="form-section">
+          <h3 class="form-section-title">Reparación</h3>
+          <div class="form-select-wrapper">
+            <div class="form-select-icon left">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <label for="estado-reparacion" class="sr-only">Reparación</label>
+            <select id="estado-reparacion" name="id_reparacion" required class="form-select with-icon-left">
+              <option value="" disabled selected>Cargando reparaciones...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Nuevo estado -->
+        <div>
+          <div class="form-select-wrapper">
+            <div class="form-select-icon left">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <label for="estado-nuevo" class="sr-only">Nuevo estado</label>
+            <select id="estado-nuevo" name="estado" required class="form-select with-icon-left">
+              <option value="" disabled selected>Nuevo estado*</option>
+              <option value="recibido">Recibido</option>
+              <option value="en_diagnostico">En Diagnóstico</option>
+              <option value="pendiente_aprobacion">Pendiente de Aprobación</option>
+              <option value="en_reparacion">En Reparación</option>
+              <option value="reparado">Reparado</option>
+              <option value="rechazado">Rechazado</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="form-btn form-btn-primary">Actualizar Estado</button>
+        <button type="button" class="form-btn form-btn-cancel">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const formId = 'form-actualizar-estado';
+  FormHandler.initBackButton();
+  FormHandler.initCancelButton(formId);
+
+  async function cargarReparaciones() {
+    const select = document.getElementById('estado-reparacion');
+    if (!select) return;
+    try {
+      const data = await API.getReparaciones();
+      const reps = data.datos || [];
+      select.innerHTML = '';
+      if (reps.length === 0) {
+        select.innerHTML = '<option value="" disabled selected>No hay reparaciones registradas</option>';
+        return;
+      }
+      const ph = document.createElement('option');
+      ph.value = ''; ph.disabled = true; ph.selected = true;
+      ph.textContent = 'Seleccionar reparación*';
+      select.appendChild(ph);
+      reps.forEach((r) => {
+        const opt = document.createElement('option');
+        opt.value = r.id_reparacion;
+        const estadoLabel = {
+          recibido: 'Recibido',
+          en_diagnostico: 'En diagnóstico',
+          pendiente_aprobacion: 'Pendiente de aprobación',
+          en_reparacion: 'En reparación',
+          reparado: 'Reparado',
+          rechazado: 'Rechazado',
+          cancelado: 'Cancelado',
+        }[r.estado] || r.estado;
+        opt.textContent = '#' + r.id_reparacion + ' — ' + (r.marca || '') + ' ' + (r.modelo || '') + ' [' + estadoLabel + ']';
+        select.appendChild(opt);
+      });
+    } catch (err) {
+      select.innerHTML = '<option value="" disabled selected>Error al cargar reparaciones</option>';
+    }
+  }
+
+  cargarReparaciones();
+
+  FormHandler.handleFormSubmit(formId, async (data) => {
+    if (!data.id_reparacion) throw new Error('Por favor seleccione una reparación');
+    if (!data.estado) throw new Error('Por favor seleccione el nuevo estado');
+
+    await API.actualizarEstadoReparacion(parseInt(data.id_reparacion, 10), data.estado);
+    FormHandler.showSuccess('Estado actualizado exitosamente');
+    cargarReparaciones();
+  });
+})();
+</script>

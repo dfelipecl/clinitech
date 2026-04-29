@@ -1,0 +1,108 @@
+<!-- Vista: Historial de Reparaciones -->
+<div class="form-view">
+
+  <div class="form-header">
+    <button type="button" class="form-back-btn" aria-label="Regresar al panel principal">
+      <img src="assets/icons/return.svg" alt="" aria-hidden="true">
+      <span>Regresar</span>
+    </button>
+  </div>
+
+  <div class="form-container" style="max-width:100%">
+    <div class="logo-watermark">
+      <img src="assets/img/Logo.png" alt="CliniTech Logo">
+    </div>
+
+    <h2 class="form-title">Historial de reparaciones</h2>
+
+    <!-- Tabla -->
+    <div id="historial-content" class="relative z-10 mt-4">
+      <div class="text-center py-8 text-gray-400">
+        <div class="loading-spinner mx-auto"></div>
+        <p class="mt-2">Cargando reparaciones...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  FormHandler.initBackButton();
+
+  const ESTADOS = {
+    recibido:     { label: 'Recibido',       color: 'bg-blue-100 text-blue-700' },
+    diagnostico:  { label: 'En diagnóstico', color: 'bg-yellow-100 text-yellow-700' },
+    en_reparacion:{ label: 'En reparación',  color: 'bg-orange-100 text-orange-700' },
+    listo:        { label: 'Listo',           color: 'bg-green-100 text-green-700' },
+    entregado:    { label: 'Entregado',       color: 'bg-gray-100 text-gray-600' },
+  };
+
+  function badge(estado) {
+    const e = ESTADOS[estado] || { label: estado, color: 'bg-gray-100 text-gray-600' };
+    return '<span class="px-2 py-1 rounded-full text-xs font-medium ' + e.color + '">' + e.label + '</span>';
+  }
+
+  function formatFecha(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function formatPeso(val) {
+    if (!val && val !== 0) return '—';
+    return '$' + Number(val).toLocaleString('es-CO');
+  }
+
+  async function cargarHistorial() {
+    const container = document.getElementById('historial-content');
+    try {
+      const data = await API.getReparaciones();
+      const reps = data.datos || [];
+
+      if (reps.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-400 py-8">No hay reparaciones registradas aún.</p>';
+        return;
+      }
+
+      const filas = reps.map((r) => `
+        <tr class="border-b hover:bg-gray-50 transition-colors">
+          <td class="px-4 py-3 text-sm font-medium text-gray-700">#${r.id_reparacion}</td>
+          <td class="px-4 py-3 text-sm text-gray-600">${Utils.sanitizeHTML(r.marca || '')} ${Utils.sanitizeHTML(r.modelo || '')}</td>
+          <td class="px-4 py-3 text-sm text-gray-600">${Utils.sanitizeHTML(r.numero_serie || '—')}</td>
+          <td class="px-4 py-3 text-sm text-gray-600">${Utils.sanitizeHTML(r.diagnostico || '—')}</td>
+          <td class="px-4 py-3">${badge(r.estado)}</td>
+          <td class="px-4 py-3 text-sm text-gray-600">${formatPeso(r.costo_estimado)}</td>
+          <td class="px-4 py-3 text-sm text-gray-400">${formatFecha(r.fecha_inicio)}</td>
+        </tr>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="overflow-x-auto rounded-xl border border-gray-100">
+          <table class="w-full text-left">
+            <thead class="bg-tech-blue text-white text-sm">
+              <tr>
+                <th class="px-4 py-3 rounded-tl-xl">ID</th>
+                <th class="px-4 py-3">Equipo</th>
+                <th class="px-4 py-3">Serie</th>
+                <th class="px-4 py-3">Diagnóstico</th>
+                <th class="px-4 py-3">Estado</th>
+                <th class="px-4 py-3">Costo estimado</th>
+                <th class="px-4 py-3 rounded-tr-xl">Fecha ingreso</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white">
+              ${filas}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 text-right">${reps.length} registro(s) encontrado(s)</p>
+      `;
+    } catch (err) {
+      container.innerHTML = '<p class="text-center text-red-400 py-8">Error al cargar el historial: ' + Utils.sanitizeHTML(err.message) + '</p>';
+    }
+  }
+
+  cargarHistorial();
+})();
+</script>
