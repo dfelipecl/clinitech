@@ -1,41 +1,70 @@
 /**
  * VISTA: Registrar Equipo
- * Script específico para el formulario de registro de equipos
+ * Carga clientes reales desde la API y conecta al endpoint POST /api/equipos
  */
-
-(function() {
+(function () {
   'use strict';
 
-  // Espera a que el DOM esté listo
   const formId = 'form-registrar-equipo';
 
-  // Inicializar botones
   FormHandler.initBackButton();
   FormHandler.initCancelButton(formId);
 
-  // Manejar submit del formulario
+  // ── Cargar clientes reales desde GET /api/clientes ──────────────────────
+  async function cargarClientes() {
+    const select = document.getElementById('equipo-cliente');
+    if (!select) return;
+
+    try {
+      const data    = await API.getClientes();
+      const clientes = data.datos || [];
+
+      select.innerHTML = '';
+
+      if (clientes.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = ''; opt.disabled = true; opt.selected = true;
+        opt.textContent = 'No hay clientes registrados aún';
+        select.appendChild(opt);
+      } else {
+        const placeholder = document.createElement('option');
+        placeholder.value = ''; placeholder.disabled = true; placeholder.selected = true;
+        placeholder.textContent = 'Seleccionar cliente*';
+        select.appendChild(placeholder);
+
+        clientes.forEach((c) => {
+          const opt = document.createElement('option');
+          opt.value       = c.id_cliente;
+          opt.textContent = `${c.nombre} ${c.apellido}`;
+          select.appendChild(opt);
+        });
+      }
+    } catch (err) {
+      console.error('Error cargando clientes:', err);
+      select.innerHTML = '<option value="" disabled selected>Error al cargar clientes</option>';
+    }
+  }
+
+  cargarClientes();
+
+  // ── Submit ───────────────────────────────────────────────────────────────
   FormHandler.handleFormSubmit(formId, async (data) => {
-
-    // Lógica para registrar equipo
-    console.log('Registrando equipo:', data);
-
-    // Validación adicional específica
-    if (!data.cliente || data.cliente === '') {
+    if (!data.id_cliente || data.id_cliente === '') {
       throw new Error('Por favor seleccione un cliente');
     }
 
-    // Aquí iría la llamada al backend
-    // const response = await fetch('/api/equipos', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(data)
-    // });
+    const payload = {
+      tipo:         data.tipo,
+      marca:        data.marca,
+      modelo:       data.modelo,
+      numero_serie: data.numero_serie,
+      id_cliente:   parseInt(data.id_cliente, 10),
+    };
 
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Mensaje de éxito
+    await API.crearEquipo(payload);
     FormHandler.showSuccess('Equipo registrado exitosamente');
-  });
 
+    // Recargar clientes por si se agregó uno nuevo
+    cargarClientes();
+  });
 })();

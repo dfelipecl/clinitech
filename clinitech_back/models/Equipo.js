@@ -29,7 +29,8 @@ const Equipo = {
     const resultado = await pool.query(
       `SELECT e.id_equipo, e.marca, e.modelo, e.numero_serie,
               c.id_cliente,
-              u.nombre, u.apellido, u.documento
+              u.nombre, u.apellido, u.documento,
+              u.nombre || ' ' || u.apellido AS nombre_cliente
        FROM equipo e
        JOIN cliente c ON e.id_cliente = c.id_cliente
        JOIN usuario u ON c.id_usuario = u.id_usuario
@@ -45,7 +46,8 @@ const Equipo = {
     const resultado = await pool.query(
       `SELECT e.id_equipo, e.marca, e.modelo, e.numero_serie,
               c.id_cliente,
-              u.nombre, u.apellido, u.documento
+              u.nombre, u.apellido, u.documento,
+              u.nombre || ' ' || u.apellido AS nombre_cliente
        FROM equipo e
        JOIN cliente c ON e.id_cliente = c.id_cliente
        JOIN usuario u ON c.id_usuario = u.id_usuario

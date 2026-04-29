@@ -12,12 +12,12 @@ const Tecnico = {
   /**
    * Crea un nuevo técnico vinculado a un usuario existente.
    */
-  async crear({ id_usuario, especialidad }) {
+  async crear({ id_usuario }) {
     const resultado = await pool.query(
-      `INSERT INTO tecnico (id_usuario, especialidad, estado)
-       VALUES ($1, $2, 'activo')
+      `INSERT INTO tecnico (id_usuario, estado)
+       VALUES ($1, 'activo')
        RETURNING *`,
-      [id_usuario, especialidad]
+      [id_usuario]
     );
     return resultado.rows[0];
   },
@@ -28,7 +28,7 @@ const Tecnico = {
    */
   async obtenerTodos() {
     const resultado = await pool.query(
-      `SELECT t.id_tecnico, t.especialidad, t.estado,
+      `SELECT t.id_tecnico, t.estado,
               u.id_usuario, u.nombre, u.apellido, u.documento, u.correo, u.telefono
        FROM tecnico t
        JOIN usuario u ON t.id_usuario = u.id_usuario
@@ -42,7 +42,7 @@ const Tecnico = {
    */
   async buscarPorId(id_tecnico) {
     const resultado = await pool.query(
-      `SELECT t.id_tecnico, t.especialidad, t.estado,
+      `SELECT t.id_tecnico, t.estado,
               u.id_usuario, u.nombre, u.apellido, u.documento, u.correo, u.telefono
        FROM tecnico t
        JOIN usuario u ON t.id_usuario = u.id_usuario
@@ -69,14 +69,13 @@ const Tecnico = {
    * Actualiza la especialidad y/o el estado de un técnico.
    * COALESCE conserva el valor actual si el campo no se envía.
    */
-  async actualizar(id_tecnico, { especialidad, estado }) {
+  async actualizar(id_tecnico, { estado }) {
     const resultado = await pool.query(
       `UPDATE tecnico
-       SET especialidad = COALESCE($1, especialidad),
-           estado       = COALESCE($2, estado)
-       WHERE id_tecnico = $3
+       SET estado = COALESCE($1, estado)
+       WHERE id_tecnico = $2
        RETURNING *`,
-      [especialidad, estado, id_tecnico]
+      [estado, id_tecnico]
     );
     return resultado.rows[0] || null;
   },

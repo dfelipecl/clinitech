@@ -1,36 +1,27 @@
 /**
  * VISTA: Registrar Técnico
- * Script específico para el formulario de registro de técnicos
+ * Conectado al endpoint POST /api/auth/registrar (rol: tecnico)
  */
-
-(function() {
+(function () {
   'use strict';
 
-  // Espera a que el DOM esté listo
   const formId = 'form-registrar-tecnico';
 
-  // Inicializar botones
   FormHandler.initBackButton();
   FormHandler.initCancelButton(formId);
 
-  // Manejar submit del formulario
   FormHandler.handleFormSubmit(formId, async (data) => {
+    const payload = {
+      nombre:    data.nombres,
+      apellido:  data.apellidos,
+      documento: data.documento,
+      correo:    data.correo,
+      telefono:  data.telefono,
+      rol:       'tecnico',
+      password:  data.documento, // contraseña inicial = número de documento
+    };
 
-    // Lógica para registrar técnico
-    console.log('Registrando técnico:', data);
-
-    // Aquí iría la llamada al backend
-    // const response = await fetch('/api/tecnicos', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(data)
-    // });
-
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Mensaje de éxito
-    FormHandler.showSuccess('Técnico registrado exitosamente');
+    await API.registrar(payload);
+    FormHandler.showSuccess('Técnico registrado exitosamente. Su contraseña inicial es su número de documento.');
   });
-
 })();

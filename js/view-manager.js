@@ -7,6 +7,8 @@ const ViewManager = {
   currentView: null,
   viewsPath: 'views/',
   viewCache: {}, // Cache para almacenar vistas ya cargadas
+  // Vistas con selects dinámicos que no deben cachearse (sus datos cambian)
+  noCacheViews: ['ingresar-equipo', 'actualizar-estado', 'registrar-equipo'],
 
   /**
    * Carga una vista desde un archivo HTML
@@ -20,7 +22,7 @@ const ViewManager = {
 
     try {
       // Determinar la ruta según el tipo de usuario
-      const userRole = Auth.getSession()?.role || 'tecnico';
+      const userRole = Auth.getSession()?.rol || 'tecnico';
       
       // Mapeo de vistas a rutas (para subdirectorios)
       const viewPaths = {
@@ -43,8 +45,9 @@ const ViewManager = {
       const mappedPath = viewPaths[viewName] || viewName;
       const viewPath = `${this.viewsPath}${userRole}/${mappedPath}.html`;
 
-      // Verificar si ya está en cache
-      if (this.viewCache[viewPath]) {
+      // Verificar si ya está en cache (excluir vistas con datos dinámicos)
+      const skipCache = this.noCacheViews.includes(viewName);
+      if (!skipCache && this.viewCache[viewPath]) {
         console.log('📦 Cargando desde cache:', viewPath);
         targetElement.innerHTML = this.viewCache[viewPath];
         this.currentView = viewName;
@@ -216,11 +219,17 @@ const ViewManager = {
     const targetElement = document.getElementById('main-content');
     if (!targetElement) return;
 
+    // Título dinámico según el rol del usuario autenticado
+    const rol   = Auth.getSession()?.rol || 'tecnico';
+    const titulo = rol === 'cliente'
+      ? 'Bienvenido al Panel Cliente'
+      : 'Bienvenido al Panel Técnico';
+
     // Mostrar vista de bienvenida
     targetElement.innerHTML = `
       <div class="p-8">
         <div class="text-center text-gray-500 mt-56">
-          <h2 class="text-2xl font-semibold mb-2">Bienvenido al Panel Técnico</h2>
+          <h2 class="text-2xl font-semibold mb-2">${titulo}</h2>
           <p class="text-lg">Selecciona una opción del menú lateral para comenzar</p>
         </div>
       </div>
@@ -237,7 +246,7 @@ const ViewManager = {
    * Precarga vistas para mejorar la velocidad
    */
   async preloadViews(viewNames) {
-    const userRole = Auth.getSession()?.role || 'cliente';
+    const userRole = Auth.getSession()?.rol || 'tecnico';
     
     const preloadPromises = viewNames.map(async (viewName) => {
       try {

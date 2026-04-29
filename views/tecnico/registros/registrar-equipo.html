@@ -11,104 +11,120 @@
 
   <!-- Contenedor del formulario -->
   <div class="form-container">
-    
+
     <!-- Logo de marca de agua -->
     <div class="logo-watermark">
       <img src="assets/img/Logo.png" alt="CliniTech Logo">
     </div>
-    
+
     <!-- Título -->
     <h2 class="form-title">Formulario de registro de equipo</h2>
 
     <!-- Formulario -->
     <form id="form-registrar-equipo" class="form-body">
-      
+
       <div class="form-fields">
-        <!-- Información del Equipo -->
+
+        <!-- Tipo de equipo + Marca -->
         <div class="form-grid form-grid-2">
           <div>
+            <div class="form-select-wrapper">
+              <div class="form-select-icon left">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
+              <label for="equipo-tipo" class="sr-only">Tipo de equipo</label>
+              <select
+                id="equipo-tipo"
+                name="tipo"
+                required
+                class="form-select with-icon-left"
+                aria-label="Tipo de equipo"
+              >
+                <option value="" disabled selected>Tipo de equipo*</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Desktop">Desktop</option>
+                <option value="Tablet">Tablet</option>
+                <option value="Impresora">Impresora</option>
+                <option value="Servidor">Servidor</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
             <label for="equipo-marca" class="sr-only">Marca</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               id="equipo-marca"
-              name="marca" 
+              name="marca"
               placeholder="Marca*"
               required
               class="form-input"
               aria-label="Marca del equipo"
             >
           </div>
-          
+        </div>
+
+        <!-- Modelo + Número de serie -->
+        <div class="form-grid form-grid-2">
           <div>
             <label for="equipo-modelo" class="sr-only">Modelo</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               id="equipo-modelo"
-              name="modelo" 
+              name="modelo"
               placeholder="Modelo*"
               required
               class="form-input"
               aria-label="Modelo del equipo"
             >
           </div>
-        </div>
 
-        <!-- Número de Serie -->
-        <div>
-          <label for="equipo-serial" class="sr-only">Número de serie</label>
-          <input 
-            type="text" 
-            id="equipo-serial"
-            name="serial" 
-            placeholder="Número de serie*"
-            required
-            class="form-input"
-            aria-label="Número de serie"
-          >
+          <div>
+            <label for="equipo-serial" class="sr-only">Número de serie</label>
+            <input
+              type="text"
+              id="equipo-serial"
+              name="numero_serie"
+              placeholder="Número de serie*"
+              required
+              class="form-input"
+              aria-label="Número de serie"
+            >
+          </div>
         </div>
 
         <!-- Sección Cliente -->
         <div class="form-section">
           <h3 class="form-section-title">Cliente</h3>
-          
+
           <div class="form-select-wrapper">
-            <div class="form-select-icon right">
+            <div class="form-select-icon left">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </div>
             <label for="equipo-cliente" class="sr-only">Cliente</label>
-            <select 
+            <select
               id="equipo-cliente"
-              name="cliente" 
+              name="id_cliente"
               required
-              class="form-select with-icon-right"
+              class="form-select with-icon-left"
               aria-label="Seleccionar cliente"
             >
-              <option value="" disabled selected>Cliente*</option>
-              <option value="usuario1">Juan Pérez</option>
-              <option value="usuario2">María García</option>
-              <option value="usuario3">Carlos López</option>
+              <option value="" disabled selected>Cargando clientes...</option>
             </select>
           </div>
         </div>
+
       </div>
 
       <!-- Botones de acción -->
       <div class="form-actions">
-        <button 
-          type="submit"
-          class="form-btn form-btn-primary"
-        >
-          Registrar
-        </button>
-        
-        <button 
-          type="button"
-          class="form-btn form-btn-cancel"
-        >
-          Cancelar
-        </button>
+        <button type="submit" class="form-btn form-btn-primary">Registrar</button>
+        <button type="button" class="form-btn form-btn-cancel">Cancelar</button>
       </div>
     </form>
   </div>

@@ -45,11 +45,11 @@ const ReparacionService = {
 
   /**
    * Actualiza el estado de una reparación.
-   * Valida que la transición de estado sea coherente con el flujo del sistema:
-   * recibido → diagnostico → en_reparacion → listo → entregado
+   * Flujo válido: recibido → en_diagnostico → pendiente_aprobacion → en_reparacion → reparado
+   * También se puede pasar a: rechazado, cancelado
    */
   async actualizarEstado(id, datos) {
-    const estadosValidos = ['recibido', 'diagnostico', 'en_reparacion', 'listo', 'entregado'];
+    const estadosValidos = ['recibido', 'en_diagnostico', 'pendiente_aprobacion', 'en_reparacion', 'reparado', 'rechazado', 'cancelado'];
     if (datos.estado && !estadosValidos.includes(datos.estado)) {
       const error = new Error(`Estado inválido. Los valores permitidos son: ${estadosValidos.join(', ')}`);
       error.estado = 400;
@@ -78,11 +78,11 @@ const ReparacionService = {
       throw error;
     }
 
-    // Solo se puede eliminar si aún no ha comenzado el proceso
+    // Solo se puede eliminar si aún no ha comenzado el diagnóstico
     if (reparacion.estado !== 'recibido') {
       const error = new Error(
         `No se puede eliminar una reparación en estado '${reparacion.estado}'. ` +
-        'Solo se pueden eliminar órdenes en estado recibido.'
+        'Solo se pueden eliminar órdenes en estado "recibido".'
       );
       error.estado = 409;
       throw error;

@@ -35,9 +35,6 @@ router.post('/registrar', [
     .isIn(['tecnico', 'cliente']).withMessage('El rol debe ser tecnico o cliente'),
   body('password')
     .isLength({ min: 6 }).withMessage('La contraseña debe tener mínimo 6 caracteres'),
-  body('especialidad')
-    .if(body('rol').equals('tecnico'))
-    .notEmpty().withMessage('La especialidad es requerida para técnicos'),
   validar,
 ], AuthController.registrar);
 

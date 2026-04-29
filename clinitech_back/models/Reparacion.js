@@ -13,13 +13,13 @@ const Reparacion = {
    * Registra una nueva orden de reparación.
    * El estado inicial siempre es 'recibido' y el costo_total inicia en 0.
    */
-  async crear({ diagnostico, procedimiento, costo_total = 0, fecha_inicio, id_tecnico, id_equipo }) {
+  async crear({ diagnostico, descripcion_problema, procedimiento = null, costo_total = 0, fecha_inicio, id_tecnico, id_equipo }) {
     const resultado = await pool.query(
       `INSERT INTO reparacion
-         (diagnostico, procedimiento, estado, costo_total, fecha_inicio, id_tecnico, id_equipo)
-       VALUES ($1, $2, 'recibido', $3, $4, $5, $6)
+         (diagnostico, descripcion_problema, procedimiento, estado, costo_total, fecha_inicio, id_tecnico, id_equipo)
+       VALUES ($1, $2, $3, 'recibido', $4, $5, $6, $7)
        RETURNING *`,
-      [diagnostico, procedimiento, costo_total, fecha_inicio || new Date(), id_tecnico, id_equipo]
+      [diagnostico, descripcion_problema || null, procedimiento, costo_total, fecha_inicio || new Date(), id_tecnico, id_equipo]
     );
     return resultado.rows[0];
   },
@@ -32,6 +32,7 @@ const Reparacion = {
     const resultado = await pool.query(
       `SELECT r.*,
               e.marca, e.modelo, e.numero_serie,
+              c.id_cliente,
               u.nombre  AS nombre_tecnico,  u.apellido  AS apellido_tecnico,
               uc.nombre AS nombre_cliente,  uc.apellido AS apellido_cliente
        FROM reparacion r
@@ -52,6 +53,7 @@ const Reparacion = {
     const resultado = await pool.query(
       `SELECT r.*,
               e.marca, e.modelo, e.numero_serie,
+              c.id_cliente,
               u.nombre  AS nombre_tecnico,  u.apellido  AS apellido_tecnico,
               uc.nombre AS nombre_cliente,  uc.apellido AS apellido_cliente
        FROM reparacion r
@@ -73,6 +75,7 @@ const Reparacion = {
     const resultado = await pool.query(
       `SELECT r.*,
               e.marca, e.modelo, e.numero_serie,
+              c.id_cliente,
               uc.nombre AS nombre_cliente, uc.apellido AS apellido_cliente
        FROM reparacion r
        JOIN equipo  e  ON r.id_equipo  = e.id_equipo

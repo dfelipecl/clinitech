@@ -73,7 +73,7 @@ const AuthService = {
    * Registra un nuevo usuario y crea su perfil según el rol.
    * Verifica unicidad de documento y correo antes de proceder.
    */
-  async registrar({ nombre, apellido, documento, correo, telefono, rol, password, especialidad }) {
+  async registrar({ nombre, apellido, documento, correo, telefono, rol, password }) {
     // 1. Verificar unicidad del documento
     const documentoExistente = await Usuario.buscarPorDocumento(documento);
     if (documentoExistente) {
@@ -101,12 +101,7 @@ const AuthService = {
     // 5. Crear el perfil correspondiente al rol
     let perfil = null;
     if (rol === 'tecnico') {
-      if (!especialidad) {
-        const error = new Error('La especialidad es requerida para técnicos');
-        error.estado = 400;
-        throw error;
-      }
-      perfil = await Tecnico.crear({ id_usuario: nuevoUsuario.id_usuario, especialidad });
+      perfil = await Tecnico.crear({ id_usuario: nuevoUsuario.id_usuario });
     } else {
       perfil = await Cliente.crear({ id_usuario: nuevoUsuario.id_usuario });
     }

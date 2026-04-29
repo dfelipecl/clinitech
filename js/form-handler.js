@@ -84,9 +84,16 @@ const FormHandler = {
     const errors = [];
     const data = Object.fromEntries(formData);
 
-    // Validar campos requeridos
-    for (const [key, value] of Object.entries(data)) {
-      if (!value || value.trim() === '') {
+    // Validar solo campos marcados como required en el DOM
+    // Esto evita rechazar campos opcionales que estén vacíos
+    const form = document.querySelector('form');
+    const requiredNames = form
+      ? Array.from(form.querySelectorAll('[required]')).map(el => el.name).filter(Boolean)
+      : Object.keys(data);
+
+    for (const key of requiredNames) {
+      const value = data[key];
+      if (!value || String(value).trim() === '') {
         errors.push(`El campo ${key} es obligatorio`);
       }
     }

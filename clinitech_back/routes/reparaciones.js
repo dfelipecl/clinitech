@@ -21,10 +21,11 @@ router.get('/', soloTecnico, ReparacionController.listar);
 // GET /api/reparaciones/:id — reparación por ID
 router.get('/:id', ReparacionController.obtener);
 
-// POST /api/reparaciones — registrar nueva orden
+// POST /api/reparaciones — registrar nueva orden (ingreso)
+// procedimiento es opcional en el ingreso; se completa en la etapa de reparación
 router.post('/', soloTecnico, [
   body('diagnostico').notEmpty().withMessage('El diagnóstico es requerido'),
-  body('procedimiento').notEmpty().withMessage('El procedimiento es requerido'),
+  body('procedimiento').optional({ nullable: true, checkFalsy: true }),
   body('id_tecnico')
     .notEmpty().withMessage('El técnico es requerido')
     .isInt({ min: 1 }).withMessage('id_tecnico debe ser un número entero positivo'),
@@ -38,7 +39,7 @@ router.post('/', soloTecnico, [
 router.put('/:id/estado', soloTecnico, [
   body('estado')
     .optional()
-    .isIn(['recibido', 'diagnostico', 'en_reparacion', 'listo', 'entregado'])
+    .isIn(['recibido', 'en_diagnostico', 'pendiente_aprobacion', 'en_reparacion', 'reparado', 'rechazado', 'cancelado'])
     .withMessage('Estado inválido'),
   body('costo_total')
     .optional()

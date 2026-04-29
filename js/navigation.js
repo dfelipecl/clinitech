@@ -269,25 +269,24 @@ const Navigation = {
   },
 
   /**
-   * Carga la información del usuario desde la sesión
+   * Carga la información del usuario desde la sesión real (JWT)
    */
   loadUserInfo() {
     const session = Auth.getSession();
     if (!session) {
-      // Si no hay sesión, redirigir al login
       Auth.logout();
       return;
     }
 
     const { userName, userDoc } = this.elements;
-    
+
     if (userName) {
-      // En producción, el nombre vendría del servidor
-      userName.textContent = 'Usuario';
+      userName.textContent = session.nombre + ' ' + session.apellido;
     }
-    
+
     if (userDoc) {
-      userDoc.textContent = session.documento;
+      // Mostrar documento o correo según disponibilidad
+      userDoc.textContent = session.correo || session.documento;
     }
   },
 

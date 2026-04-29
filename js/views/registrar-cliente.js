@@ -1,36 +1,28 @@
 /**
  * VISTA: Registrar Cliente
- * Script específico para el formulario de registro de clientes
+ * Conectado al endpoint POST /api/auth/registrar (rol: cliente)
  */
-
-(function() {
+(function () {
   'use strict';
 
-  // Espera a que el DOM esté listo
   const formId = 'form-registrar-cliente';
 
-  // Inicializar botones
   FormHandler.initBackButton();
   FormHandler.initCancelButton(formId);
 
-  // Manejar submit del formulario
   FormHandler.handleFormSubmit(formId, async (data) => {
+    // Mapear campos del formulario a los que espera el backend
+    const payload = {
+      nombre:   data.nombres,
+      apellido: data.apellidos,
+      documento: data.documento,
+      correo:   data.correo,
+      telefono: data.telefono,
+      rol:      'cliente',
+      password: data.documento, // contraseña inicial = número de documento
+    };
 
-    // Lógica para registrar cliente
-    console.log('Registrando cliente:', data);
-
-    // Aquí iría la llamada al backend
-    // const response = await fetch('/api/clientes', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(data)
-    // });
-
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Mensaje de éxito
-    FormHandler.showSuccess('Cliente registrado exitosamente');
+    await API.registrar(payload);
+    FormHandler.showSuccess('Cliente registrado exitosamente. Su contraseña inicial es su número de documento.');
   });
-
 })();

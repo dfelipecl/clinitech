@@ -6,10 +6,11 @@
 const express = require('express');
 const cors    = require('cors');
 
-const authRoutes        = require('./routes/auth');
-const tecnicosRoutes    = require('./routes/tecnicos');
+const authRoutes         = require('./routes/auth');
+const tecnicosRoutes     = require('./routes/tecnicos');
 const reparacionesRoutes = require('./routes/reparaciones');
-const equiposRoutes     = require('./routes/equipos');
+const equiposRoutes      = require('./routes/equipos');
+const clientesRoutes     = require('./routes/clientes');
 const { manejarError } = require('./middlewares/errorHandler');
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/auth',         authRoutes);
 app.use('/api/tecnicos',     tecnicosRoutes);
 app.use('/api/reparaciones', reparacionesRoutes);
 app.use('/api/equipos',      equiposRoutes);
+app.use('/api/clientes',     clientesRoutes);
 
 // ── Ruta de verificación ──────────────────────────────────
 app.get('/api/health', (req, res) => {

@@ -74,7 +74,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* El logo de fondo se agrega con la clase .logo-watermark (definida en main.css) */
