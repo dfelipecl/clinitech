@@ -110,7 +110,8 @@
   FormHandler.initBackButton();
   FormHandler.initCancelButton(formId);
 
-  // ── Cargar equipos disponibles desde GET /api/equipos ──────────────────
+  // Carga la lista de equipos registrados en la BD para poblar el select.
+  // Se recarga tras cada registro exitoso por si se añadió un equipo nuevo.
   async function cargarEquipos() {
     const select = document.getElementById('rep-equipo');
     if (!select) return;
@@ -140,7 +141,9 @@
 
   cargarEquipos();
 
-  // ── Submit ───────────────────────────────────────────────────────────────
+  // Al enviar el formulario se crean dos peticiones en secuencia:
+  // 1) POST /api/reparaciones crea la orden con estado 'recibido'
+  // 2) Si el técnico eligió otro estado, PUT actualiza el estado inmediatamente
   FormHandler.handleFormSubmit(formId, async (data) => {
     if (!data.id_equipo) throw new Error('Por favor seleccione un equipo');
     if (!data.descripcion_problema || !data.descripcion_problema.trim()) throw new Error('El motivo/problema reportado es requerido');
@@ -149,7 +152,7 @@
 
     const session = Auth.getSession();
 
-    // Diagnóstico puede incluir la descripción de estado si se llenó
+    // Si el técnico llenó 'descripción del estado', se añade al diagnóstico como observación
     const diagnosticoFinal = data.descripcion_estado
       ? data.diagnostico.trim() + '\n\nObservación: ' + data.descripcion_estado.trim()
       : data.diagnostico.trim();
@@ -161,10 +164,10 @@
       descripcion_problema: data.descripcion_problema || null,
     };
 
-    // 1. Crear la reparación (entra en 'recibido' por defecto en la BD)
+    // Paso 1: crear la orden — la BD la inicializa siempre en estado 'recibido'
     const resp = await API.crearReparacion(payload);
 
-    // 2. Si el estado elegido no es 'recibido', actualizarlo de inmediato
+    // Paso 2: si el técnico seleccionó un estado diferente, actualizarlo en seguida
     if (data.estado_inicial !== 'recibido' && resp.datos && resp.datos.id_reparacion) {
       await API.actualizarEstadoReparacion(resp.datos.id_reparacion, data.estado_inicial);
     }

@@ -2,7 +2,8 @@
    ESTILOS GLOBALES
    =========================== */
 
-/* Screen reader only - Labels accesibles pero visualmente ocultos */
+/* Clase de accesibilidad: oculta el elemento visualmente sin eliminarlo del DOM.
+   Los lectores de pantalla lo siguen leyendo. Se usa en labels de formularios. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -15,7 +16,8 @@
   border-width: 0;
 }
 
-/* Logo de marca de agua - Reutilizable en toda la app */
+/* Marca de agua del logo: posicionada en el centro de la tarjeta, detrás del contenido (z-index: 0).
+   Aparece en el panel principal y en todos los formularios como elemento decorativo. */
 .logo-watermark {
   position: absolute;
   inset: 0;
@@ -32,7 +34,8 @@
   user-select: none;
 }
 
-/* Custom scrollbar - Aplicado globalmente */
+/* Scrollbar personalizada para mantener la identidad visual del proyecto.
+   Compatible con Chrome, Edge y Safari. Firefox usa su propia barra por defecto. */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -52,7 +55,8 @@
   background: var(--scrollbar-thumb-hover, #94a3b8);
 }
 
-/* Variables CSS para colores de scrollbar */
+/* Variables CSS reutilizables para el color de la scrollbar.
+   Centralizadas aquí para facilitar cambios de tema. */
 :root {
   --scrollbar-track: #f1f5f9;
   --scrollbar-thumb: #cbd5e1;

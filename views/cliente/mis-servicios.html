@@ -30,6 +30,7 @@
 
   FormHandler.initBackButton();
 
+  // Mapa de estados a etiqueta, color e icono para las tarjetas del cliente
   const ESTADOS = {
     recibido:     { label: 'Recibido',       color: 'bg-blue-100 text-blue-700',    icon: '📥' },
     diagnostico:  { label: 'En diagnóstico', color: 'bg-yellow-100 text-yellow-700', icon: '🔍' },
@@ -38,6 +39,7 @@
     entregado:    { label: 'Entregado',       color: 'bg-gray-100 text-gray-600',    icon: '📦' },
   };
 
+  // Genera el HTML de la tarjeta de servicio para una reparación
   function tarjeta(r) {
     const e = ESTADOS[r.estado] || { label: r.estado, color: 'bg-gray-100 text-gray-600', icon: '❓' };
     const costo = r.costo_estimado ? '$' + Number(r.costo_estimado).toLocaleString('es-CO') : 'Por definir';
@@ -63,15 +65,17 @@
     `;
   }
 
+  // Carga las reparaciones del cliente autenticado filtrando por su id_cliente
   async function cargarServicios() {
     const container = document.getElementById('servicios-content');
     try {
-      // El endpoint retorna reparaciones; filtramos por id_cliente de la sesión
+      // La API devuelve todas las reparaciones; se filtra en el cliente por id_cliente
+      // para mostrar solo las del usuario autenticado
       const session = Auth.getSession();
       const data = await API.getReparaciones();
       const todas = data.datos || [];
 
-      // Filtrar las del cliente autenticado si hay id_cliente
+      // Si la sesión tiene id_cliente se filtran las propias; si no, se muestran todas (fallback seguro)
       const mias = session.id_cliente
         ? todas.filter((r) => r.id_cliente === session.id_cliente)
         : todas;

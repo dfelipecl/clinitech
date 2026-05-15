@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CliniTech - Iniciar Sesión</title>
   
-  <!-- Favicon -->
+  <!-- Favicon: logo pequeño que aparece en la pestaña del navegador -->
   <link rel="icon" type="image/png" href="assets/img/mini-logo-white.png">
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS: cargado desde CDN para uso en desarrollo -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts -->
+  <!-- Fuente Poppins: tipografía principal del proyecto, cargada desde Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Configuración de Tailwind -->
+  <!-- Configuración de Tailwind: define los colores y fuentes personalizados del proyecto -->
   <script src="js/config.js"></script>
   
-  <!-- Estilos personalizados -->
+  <!-- Estilos propios del proyecto: variables, scrollbar y componentes reutilizables -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
 </head>
@@ -25,16 +25,16 @@
 
   <main class="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-5xl flex flex-col lg:flex-row">
     
-    <!-- Panel Izquierdo - Formulario -->
+    <!-- Panel izquierdo: contiene el formulario de login (ocupa la mitad en desktop, ancho completo en móvil) -->
     <section class="lg:w-1/2 p-8 sm:p-12 bg-white flex flex-col justify-center min-h-[500px] lg:min-h-[600px]">
       <header class="mb-8">
         <h1 class="text-2xl sm:text-3xl font-semibold text-tech-blue">Iniciar sesión</h1>
       </header>
 
-      <!-- Credenciales -->
+      <!-- Formulario con novalidate: la validación la maneja auth.js, no el navegador -->
       <form class="space-y-6" novalidate>
 
-        <!-- Usuario -->
+        <!-- Campo documento: solo acepta números (inputmode=numeric, pattern=[0-9]*) -->
         <div>
           <label for="usuario" class="block text-sm font-medium mb-2 text-tech-blue">
             Usuario
@@ -55,7 +55,7 @@
           </span>
         </div>
 
-        <!-- Contraseña -->
+        <!-- Campo contraseña: el botón toggle alterna entre type=password y type=text -->
         <div>
           <label for="password" class="block text-sm font-medium mb-2 text-tech-blue">
             Contraseña
@@ -89,14 +89,14 @@
           </span>
         </div>
 
-        <!-- Enlace olvidar contraseña -->
+        <!-- Enlace de recuperación de contraseña (funcionalidad pendiente de implementar) -->
         <div class="text-right">
           <a href="#" class="text-tech-blue text-sm hover:underline focus:underline focus:outline-none">
             ¿Olvidaste tu contraseña?
           </a>
         </div>
 
-        <!-- Botón Login -->
+        <!-- Botón de submit: se deshabilita durante el login para evitar envíos dobles -->
         <button 
           type="submit"
           class="w-full bg-tech-blue text-white py-3 rounded-xl font-semibold hover:bg-[#2d4190] focus:bg-[#2d4190] focus:outline-none focus:ring-2 focus:ring-tech-blue focus:ring-offset-2 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
@@ -107,10 +107,10 @@
       </form>
     </section>
 
-    <!-- Panel Derecho - Bienvenida -->
+    <!-- Panel derecho: sección decorativa con el logo y mensaje de bienvenida (visible solo en desktop) -->
     <aside class="lg:w-1/2 bg-tech-blue relative overflow-hidden flex flex-col items-center justify-center p-8 sm:p-12 text-center min-h-[400px] lg:min-h-[600px]">
       
-      <!-- Decoración -->
+      <!-- Círculos decorativos con opacidad baja para dar profundidad al fondo azul -->
       <div class="absolute top-10 right-10 w-24 sm:w-32 h-24 sm:h-32 bg-white bg-opacity-10 rounded-full"></div>
       <div class="absolute bottom-10 left-10 w-20 sm:w-24 h-20 sm:h-24 bg-white bg-opacity-10 rounded-full"></div>
       <div class="absolute top-1/2 left-1/4 w-12 sm:w-16 h-12 sm:h-16 bg-white bg-opacity-5 rounded-full"></div>
@@ -128,7 +128,8 @@
     </aside>
   </main>
 
-  <!-- Scripts -->
+  <!-- Scripts cargados al final del body para no bloquear el render de la página.
+       Orden: utils (base) → api (peticiones) → auth (lógica de login) -->
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>
   <script src="js/auth.js"></script>

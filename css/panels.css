@@ -6,12 +6,13 @@
    SIDEBAR
    =========================== */
 
-/* Animaciones del Sidebar */
+/* Transición de ancho para el efecto de colapso y expansión del sidebar en desktop. */
 #sidebar {
   transition: width 0.3s ease-in-out;
 }
 
-/* Submenús - Layout */
+/* Submenús colapsados por defecto con max-height: 0 y opacity: 0.
+   El JS asigna max-height con scrollHeight al abrir, lo que permite la animación suave. */
 .submenu {
   overflow: hidden;
   max-height: 0;
@@ -29,11 +30,14 @@
    SIDEBAR COLAPSADO
    =========================== */
 
+/* Clase aplicada por JS al hacer clic en el toggle del sidebar.
+   !important necesario para sobrepasar el width: w-80 definido por Tailwind en el HTML. */
 .sidebar-collapsed {
   width: 5rem !important;
 }
 
-/* Ocultar elementos cuando está colapsado */
+/* Ocultar texto, badges e info de usuario cuando el sidebar está colapsado.
+   Solo quedan visibles los iconos para mantener la navegabilidad. */
 .sidebar-collapsed .sidebar-text,
 .sidebar-collapsed .sidebar-badge,
 .sidebar-collapsed .sidebar-user,
@@ -42,7 +46,8 @@
   display: none !important;
 }
 
-/* Ajustar navegación colapsada */
+/* En modo colapsado la navegación ocupa todo el espacio vertical
+   y los botones se reducen a cuadrados de 2.5rem centrados. */
 .sidebar-collapsed #navigation {
   flex: 1 !important;
   padding: 1rem 0.5rem !important;
@@ -59,7 +64,8 @@
   margin: 0 auto 0.5rem auto;
 }
 
-/* Mensajes y notificaciones colapsados */
+/* Mensajes y notificaciones en modo colapsado: se apilan centrados
+   mostrando solo el icono con su badge de conteo. */
 .sidebar-collapsed #messages-notifications {
   display: flex !important;
   flex-direction: column;
@@ -76,7 +82,8 @@
   position: relative;
 }
 
-/* Usuario colapsado */
+/* Info del usuario en modo colapsado: solo se muestra el avatar circular.
+   El nombre, documento y botón de opciones quedan ocultos. */
 .sidebar-collapsed #user-info {
   display: flex !important;
   margin: 1rem auto 1.5rem auto;
@@ -102,7 +109,8 @@
    =========================== */
 
 @media (max-width: 1023px) {
-  /* Sidebar móvil */
+  /* En móvil el sidebar se sale del flujo (position: fixed) y se oculta
+   fuera de la pantalla con translateX(-100%). El JS lo muestra con la clase -translate-x-full. */
   #sidebar {
     position: fixed;
     left: 0;
@@ -117,7 +125,8 @@
     transform: translateX(0);
   }
   
-  /* Overlay cuando el sidebar está abierto en móvil */
+  /* Overlay oscuro detrás del sidebar en móvil.
+     Al hacer clic sobre él, el JS cierra el sidebar. */
   #sidebar-overlay {
     z-index: 20;
   }

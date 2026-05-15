@@ -74,6 +74,8 @@
   FormHandler.initBackButton();
   FormHandler.initCancelButton(formId);
 
+  // Carga todas las reparaciones para que el técnico seleccione cuál actualizar.
+  // Muestra marca, modelo y estado actual para identificar fácilmente cada orden.
   async function cargarReparaciones() {
     const select = document.getElementById('estado-reparacion');
     if (!select) return;
@@ -111,6 +113,8 @@
 
   cargarReparaciones();
 
+  // Al enviar: valida que se haya seleccionado reparación y estado, luego llama al endpoint PUT.
+  // Recarga el select tras el éxito para reflejar el nuevo estado.
   FormHandler.handleFormSubmit(formId, async (data) => {
     if (!data.id_reparacion) throw new Error('Por favor seleccione una reparación');
     if (!data.estado) throw new Error('Por favor seleccione el nuevo estado');

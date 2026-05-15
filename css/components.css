@@ -6,7 +6,8 @@
    TRANSICIONES GLOBALES
    =========================== */
 
-/* Transiciones suaves solo en elementos interactivos */
+/* Transiciones aplicadas exclusivamente a elementos interactivos.
+   Limitar la lista de propiedades evita animaciones involuntarias en layout y posición. */
 button,
 a,
 input,
@@ -41,7 +42,8 @@ textarea,
          transition-all duration-200;
 }
 
-/* Botones del menú sidebar */
+/* Botón del menú lateral: sin transición de padding para evitar un salto visual
+   cuando el estado activo agrega padding-top y padding-bottom. */
 .menu-btn {
   position: relative;
   /* Remover transición de padding para evitar efecto visual durante cambio de estado */
@@ -50,6 +52,8 @@ textarea,
   transition-duration: 200ms;
 }
 
+/* Estado activo del botón de menú: fondo semitransparente y sombra sutil.
+   border-radius: 9999px lo convierte en "pill" para destacarlo sin ser invasivo. */
 .menu-btn.active {
   background-color: rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
@@ -62,7 +66,8 @@ textarea,
    ENLACES
    =========================== */
 
-/* Enlaces de submenú */
+/* Enlace de submenú: el punto indicador (span:first-child) cambia de color
+   al hacer hover o cuando el enlace está activo, reforzando la navegación actual. */
 .submenu-link {
   position: relative;
 }
@@ -175,6 +180,8 @@ textarea,
   padding: 2rem;
 }
 
+/* Spinner de carga: animación de rotación de 360 grados.
+   El borde superior en azul principal crea el efecto de "giro". */
 .loading-spinner {
   width: 48px;
   height: 48px;

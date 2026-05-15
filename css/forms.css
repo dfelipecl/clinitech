@@ -6,6 +6,7 @@
 /* ===========================
    VARIABLES DE FORMULARIOS
    =========================== */
+/* Variables de color para formularios. Cambiar aquí actualiza todos los formularios del sistema. */
 :root {
   --form-primary: #3852AE;
   --form-primary-hover: #2d4190;
@@ -18,6 +19,8 @@
    CONTENEDOR DE VISTA
    =========================== */
 
+/* Contenedor raíz de cada vista de formulario.
+   Ocupa el 100% del área disponible y organiza header + cuerpo en columna. */
 .form-view {
   height: 100%;
   display: flex;
@@ -28,6 +31,8 @@
    BARRA SUPERIOR CON BOTÓN REGRESAR
    =========================== */
 
+/* Barra azul superior con el botón Regresar.
+   Bordes redondeados solo arriba para integrarse con .form-container abajo. */
 .form-header {
   background-color: var(--form-primary);
   color: white;
@@ -39,6 +44,8 @@
   gap: 0.75rem;
 }
 
+/* Botón Regresar: sin fondo ni borde, solo texto blanco.
+   El efecto visual se consigue reduciendo la opacidad al hacer hover. */
 .form-back-btn {
   display: flex;
   align-items: center;
@@ -65,6 +72,8 @@
    CONTENEDOR DEL FORMULARIO
    =========================== */
 
+/* Área blanca que contiene el formulario.
+   overflow-y: auto habilita scroll cuando el contenido supera la altura disponible. */
 .form-container {
   background-color: white;
   border-bottom-left-radius: 1.5rem;
@@ -83,6 +92,8 @@
    TÍTULO DEL FORMULARIO
    =========================== */
 
+/* Título del formulario centrado en azul principal.
+   z-index: 1 lo coloca por encima del logo de marca de agua (z-index: 0). */
 .form-title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -98,6 +109,8 @@
    ESTRUCTURA DEL FORMULARIO
    =========================== */
 
+/* Contenedor del formulario con ancho máximo de 896px.
+   justify-content: center lo centra verticalmente cuando hay poco contenido. */
 .form-body {
   max-width: 56rem; /* 896px */
   margin: 0 auto;
@@ -120,6 +133,8 @@
    INPUTS Y CAMPOS
    =========================== */
 
+/* Campo de texto estándar del sistema.
+   Bordes redondeados tipo "pill" y fondo azul muy claro para diferenciarlo del fondo blanco. */
 .form-input {
   width: 100%;
   padding: 1rem 1.5rem;
@@ -144,6 +159,8 @@
    SELECT CON ICONO
    =========================== */
 
+/* Contenedor relativo necesario para posicionar el icono de flecha sobre el select.
+   pointer-events: none en el icono evita que bloquee los clics al select. */
 .form-select-wrapper {
   position: relative;
 }
@@ -169,6 +186,8 @@
   color: var(--form-placeholder);
 }
 
+/* Select personalizado: appearance: none elimina la flecha nativa del navegador
+   para usar el icono SVG propio del proyecto. */
 .form-select {
   width: 100%;
   padding: 1rem 1.5rem;
@@ -203,6 +222,8 @@
    SECCIONES DEL FORMULARIO
    =========================== */
 
+/* Bloque agrupador que separa visualmente conjuntos de campos relacionados
+   (ej: sección "Contacto" en los formularios de registro). */
 .form-section {
   padding-top: 0.5rem;
 }
@@ -218,6 +239,8 @@
    GRID DE CAMPOS
    =========================== */
 
+/* Grid responsivo para campos en paralelo.
+   En móvil apila los campos; en tablets y desktop los muestra en columnas. */
 .form-grid {
   display: grid;
   gap: 1rem;
@@ -266,6 +289,8 @@
    BOTONES DE ACCIÓN
    =========================== */
 
+/* Fila de botones al pie del formulario.
+   padding-top: 3rem separa los botones del último campo para evitar clics accidentales. */
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -273,6 +298,8 @@
   padding-top: 3rem; 
 }
 
+/* Estilo base compartido por todos los botones de formulario.
+   El padding horizontal amplio (5rem) da un aspecto "pill" coherente con los inputs. */
 .form-btn {
   padding: 0.75rem 5rem;
   border-radius: 9999px;
@@ -311,18 +338,26 @@
    RESPONSIVE
    =========================== */
 
+/* En pantallas pequeñas los botones pasan a ancho completo y se apilan verticalmente.
+   Esto mejora la usabilidad táctil en móvil. */
 @media (max-width: 640px) {
-  .form-btn {
+  /* Estilo base compartido por todos los botones de formulario.
+   El padding horizontal amplio (5rem) da un aspecto "pill" coherente con los inputs. */
+.form-btn {
     padding: 0.75rem 3rem;
     font-size: 0.875rem;
   }
   
-  .form-actions {
+  /* Fila de botones al pie del formulario.
+   padding-top: 3rem separa los botones del último campo para evitar clics accidentales. */
+.form-actions {
     flex-direction: column;
     width: 100%;
   }
   
-  .form-btn {
+  /* Estilo base compartido por todos los botones de formulario.
+   El padding horizontal amplio (5rem) da un aspecto "pill" coherente con los inputs. */
+.form-btn {
     width: 100%;
   }
 }
