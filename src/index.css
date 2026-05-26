@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================
+   VARIABLES GLOBALES
+   =========================== */
+:root {
+  --form-primary:       #3852AE;
+  --form-primary-hover: #2d4190;
+  --form-input-bg:      #E8F0FE;
+  --form-text:          #374151;
+  --form-placeholder:   #9CA3AF;
+}
+
+/* ===========================
+   SCROLLBAR PERSONALIZADO
+   =========================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3852AE transparent;
+}
+*::-webkit-scrollbar       { width: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background-color: #3852AE; border-radius: 3px; }
+
+/* ===========================
+   TRANSICIONES GLOBALES
+   =========================== */
+button, a, input, select, textarea {
+  transition-property: background-color, border-color, color, fill, stroke, transform, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* ===========================
+   BOTONES GLOBALES
+   =========================== */
+@layer components {
+  .btn-primary {
+    @apply bg-tech-blue text-white py-3 px-6 rounded-xl font-semibold
+           hover:bg-[#2d4190] focus:bg-[#2d4190] focus:outline-none
+           focus:ring-2 focus:ring-tech-blue focus:ring-offset-2
+           transition-all duration-200 shadow-lg
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-white text-tech-blue py-3 px-6 rounded-xl font-semibold
+           border-2 border-tech-blue hover:bg-tech-light
+           focus:outline-none focus:ring-2 focus:ring-tech-blue
+           transition-all duration-200;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200
+           focus:outline-none focus:ring-2 focus:ring-tech-blue
+           focus:border-transparent transition-all duration-200
+           text-gray-600 placeholder-gray-400;
+  }
+}
+
+/* ===========================
+   MENÚ LATERAL — BOTONES
+   =========================== */
+
+/* Sin transición de padding para evitar salto visual al activarse */
+.menu-btn {
+  position: relative;
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.menu-btn.active {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* ===========================
+   MENÚ LATERAL — SUBMENÚS
+   =========================== */
+.submenu-link { position: relative; }
+
+.submenu-link:hover,
+.submenu-link:focus  { color: #40AAFF; }
+
+.submenu-link:hover span:first-child,
+.submenu-link:focus span:first-child,
+.submenu-link.active span:first-child { background-color: #40AAFF; }
+
+.submenu-link.active { color: #40AAFF; }
+
+/* ===========================
+   FORMULARIOS DE VISTA
+   =========================== */
+
+/* Raíz de cada vista — ocupa todo el contenedor */
+.form-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra superior azul con botón Regresar */
+.form-header {
+  background-color: var(--form-primary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.form-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-weight: 500;
+  padding: 0;
+}
+.form-back-btn:hover { opacity: 0.8; }
+.form-back-btn img   { width: 1.25rem; height: 1.25rem; }
+
+/* Área blanca del formulario */
+.form-container {
+  background-color: white;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--form-primary);
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.form-body {
+  max-width: 56rem;
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.form-fields { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* Inputs de formulario estilo "pill" */
+.form-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  background-color: var(--form-input-bg);
+  border: none;
+  outline: none;
+  color: var(--form-text);
+  font-size: 1rem;
+}
+.form-input::placeholder { color: var(--form-placeholder); }
+.form-input:focus { outline: 2px solid var(--form-primary); outline-offset: 0; }
+
+/* Select personalizado */
+.form-select-wrapper { position: relative; }
+.form-select-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.form-select-icon.left  { left: 1rem; }
+.form-select-icon.right { right: 1rem; }
+.form-select-icon svg   { width: 1rem; height: 1rem; color: var(--form-placeholder); }
+
+.form-select {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  background-color: var(--form-input-bg);
+  border: none;
+  outline: none;
+  color: var(--form-placeholder);
+  font-size: 1rem;
+  appearance: none;
+  cursor: pointer;
+}
+.form-select.with-icon-left  { padding-left: 2.5rem; }
+.form-select.with-icon-right { padding-right: 3rem; }
+.form-select:focus           { outline: 2px solid var(--form-primary); outline-offset: 0; }
+.form-select option          { color: var(--form-text); }
+
+/* Secciones del formulario */
+.form-section       { padding-top: 0.5rem; }
+.form-section-title { font-size: 1.25rem; font-weight: 600; color: var(--form-primary); margin-bottom: 1rem; }
+
+/* Grid de campos */
+.form-grid   { display: grid; gap: 1rem; }
+.form-grid-2 { grid-template-columns: 1fr; }
+.form-grid-3 { grid-template-columns: 1fr; }
+
+@media (min-width: 768px) {
+  .form-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .form-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Botones de acción del formulario */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 3rem;
+}
+
+.form-btn {
+  padding: 0.75rem 5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.form-btn-primary  { background-color: var(--form-primary); color: white; }
+.form-btn-primary:hover { background-color: var(--form-primary-hover); }
+.form-btn-cancel   { background-color: var(--form-primary); color: white; }
+.form-btn-cancel:hover  { background-color: var(--form-primary-hover); }
+.form-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+  .form-btn     { padding: 0.75rem 3rem; font-size: 0.875rem; width: 100%; }
+  .form-actions { flex-direction: column; width: 100%; }
+}
+
+/* ===========================
+   UTILIDADES
+   =========================== */
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #E5E7EB;
+  border-top-color: #3852AE;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Logo marca de agua en vistas */
+.logo-watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.logo-watermark img { width: 16rem; opacity: 0.04; }
